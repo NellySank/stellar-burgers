@@ -1,14 +1,38 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { Preloader } from '../ui/preloader';
 import { IngredientDetailsUI } from '../ui/ingredient-details';
+import { useParams, useLocation } from 'react-router-dom';
+import {
+  selectIngredients,
+  fetchIngredients,
+  selectIngredientsLoading
+} from '../../services/ingredientsSlice';
+import { useSelector } from 'react-redux';
+import { useDispatch } from '../../services/store';
 
 export const IngredientDetails: FC = () => {
-  /** TODO: взять переменную из стора */
-  const ingredientData = null;
+  const { id } = useParams<{ id: string }>();
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const backgroundLocation = location.state?.background;
 
-  if (!ingredientData) {
-    return <Preloader />;
-  }
+  const isIngredientsLoading = useSelector(selectIngredientsLoading);
+  const ingredients = useSelector(selectIngredients);
+  const ingredientData = ingredients.find((item) => item._id === id);
 
-  return <IngredientDetailsUI ingredientData={ingredientData} />;
+  useEffect(() => {
+    if (!backgroundLocation) {
+      dispatch(fetchIngredients());
+    }
+  }, [backgroundLocation]);
+
+  return (
+    <>
+      {isIngredientsLoading ? (
+        <Preloader />
+      ) : ingredientData ? (
+        <IngredientDetailsUI ingredientData={ingredientData} />
+      ) : null}
+    </>
+  );
 };

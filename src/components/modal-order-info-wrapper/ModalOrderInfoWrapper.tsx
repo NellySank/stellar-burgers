@@ -3,14 +3,14 @@ import { Modal, OrderInfo } from '@components';
 
 export const ModalOrderInfoWrapper = () => {
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
+  const { number } = useParams<{ number: string }>();
 
   const handleModalClose = () => {
     navigate(-1);
   };
 
   return (
-    <Modal title={`#${id}`} onClose={handleModalClose}>
+    <Modal title={`#${number}`} onClose={handleModalClose}>
       <OrderInfo />
     </Modal>
   );

@@ -7,37 +7,21 @@ interface ConstructorState {
     bun: TIngredient | null;
     ingredients: TConstructorIngredient[];
   };
-  orderRequest: boolean;
-  orderModalData: TOrder | null;
 }
 
 const initialState: ConstructorState = {
   constructorItems: {
     bun: null,
     ingredients: []
-  },
-  orderRequest: false,
-  orderModalData: null
-};
-
-export const createOrder = createAsyncThunk(
-  'constructorBurger/createOrder',
-  async (ingredients: string[], { rejectWithValue }) => {
-    try {
-      const response = await orderBurgerApi(ingredients);
-      return response.order;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Ошибка создания заказа');
-    }
   }
-);
+};
 
 // Слайс
 const constructorSlice = createSlice({
   name: 'constructorBurger',
   initialState,
   reducers: {
-    // Добавить ингредиент (генерируем ID здесь, если не передан)
+    // Добавить ингредиент
     addIngredient: (state, action: PayloadAction<TIngredient>) => {
       const newItem: TConstructorIngredient = {
         ...action.payload,
@@ -57,42 +41,14 @@ const constructorSlice = createSlice({
     clearConstructor: (state) => {
       state.constructorItems.bun = null;
       state.constructorItems.ingredients = [];
-    },
-    // Закрыть модальное окно заказа
-    closeOrderModal: (state) => {
-      state.orderModalData = null;
     }
   },
   selectors: {
-    selectConstructorItems: (sliceState) => sliceState.constructorItems,
-    selectOrderRequest: (sliceState) => sliceState.orderRequest,
-    selectOrderModalData: (sliceState) => sliceState.orderModalData
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(createOrder.pending, (state) => {
-        state.orderRequest = true;
-      })
-      .addCase(createOrder.fulfilled, (state, action) => {
-        state.orderRequest = false;
-        state.orderModalData = action.payload;
-      })
-      .addCase(createOrder.rejected, (state) => {
-        state.orderRequest = false;
-      });
+    selectConstructorItems: (sliceState) => sliceState.constructorItems
   }
 });
 
-export const {
-  addIngredient,
-  removeIngredient,
-  setBun,
-  clearConstructor,
-  closeOrderModal
-} = constructorSlice.actions;
-export const {
-  selectConstructorItems,
-  selectOrderRequest,
-  selectOrderModalData
-} = constructorSlice.selectors;
+export const { addIngredient, removeIngredient, setBun, clearConstructor } =
+  constructorSlice.actions;
+export const { selectConstructorItems } = constructorSlice.selectors;
 export default constructorSlice.reducer;

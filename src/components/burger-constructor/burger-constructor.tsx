@@ -13,10 +13,12 @@ import {
   closeOrderModal
 } from '../../services/ordersSlice';
 import { useNavigate } from 'react-router-dom';
+import { selectIsAuthenticated } from '../../services/profileSlice';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
 
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
 
@@ -36,15 +38,19 @@ export const BurgerConstructor: FC = () => {
   }, [dispatch, orderModalData]);
 
   const onOrderClick = () => {
-    if (!constructorItems.bun || orderRequest) return;
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: window.location.pathname } });
+    } else {
+      if (!constructorItems.bun || orderRequest) return;
 
-    const ingredientsIds = [
-      constructorItems.bun._id,
-      ...constructorItems.ingredients.map((item) => item._id),
-      constructorItems.bun._id
-    ];
+      const ingredientsIds = [
+        constructorItems.bun._id,
+        ...constructorItems.ingredients.map((item) => item._id),
+        constructorItems.bun._id
+      ];
 
-    dispatch(createOrder(ingredientsIds));
+      dispatch(createOrder(ingredientsIds));
+    }
   };
 
   const closeOrderModalLocal = () => {

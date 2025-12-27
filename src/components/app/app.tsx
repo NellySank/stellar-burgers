@@ -29,11 +29,19 @@ import {
 import { StrictMode } from 'react';
 import { Provider } from 'react-redux';
 import store from '../../services/store';
+import { useEffect } from 'react';
+import { useDispatch } from '../../services/store';
+import { checkUserAuth } from '../../services/profileSlice';
 
 const AppContent = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const backgroundLocation = location.state?.background;
+
+  useEffect(() => {
+    dispatch(checkUserAuth());
+  }, [dispatch]);
 
   const handleModalClose = () => {
     navigate(-1);
@@ -50,9 +58,30 @@ const AppContent = () => {
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
         <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/forgot-password' element={<ForgotPassword />} />
-        <Route path='/reset-password' element={<ResetPassword />} />
+        <Route
+          path='/register'
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <Register />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/forgot-password'
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <ForgotPassword />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/reset-password'
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <ResetPassword />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path='/feed/:number'
           element={
@@ -90,6 +119,21 @@ const AppContent = () => {
           element={
             <ProtectedRoute>
               <ProfileOrders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/profile/orders/:number'
+          element={
+            <ProtectedRoute>
+              <div className={styles.detailPageWrap}>
+                <p
+                  className={`text text_type_digits-default ${styles.detailHeader}`}
+                >
+                  #{orderNumber}
+                </p>
+                <OrderInfo />
+              </div>
             </ProtectedRoute>
           }
         />

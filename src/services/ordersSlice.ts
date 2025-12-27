@@ -8,7 +8,7 @@ import {
 } from '@api';
 
 interface OrdersState {
-  orders: TOrder[];
+  orders: TOrder[] | [] | undefined;
   order: TOrder | null;
   feeds: {
     orders: TOrder[];
@@ -16,6 +16,7 @@ interface OrdersState {
     totalToday: number;
   };
   loadingAllOrders: boolean;
+  loadingFeed: boolean;
   loadingOrder: boolean;
   error: string | null;
   orderRequest: boolean;
@@ -31,6 +32,7 @@ const initialState: OrdersState = {
     totalToday: 0
   },
   loadingAllOrders: false,
+  loadingFeed: false,
   loadingOrder: false,
   error: null,
   orderRequest: false,
@@ -104,6 +106,7 @@ const ordersSlice = createSlice({
     selectOrders: (sliceState) => sliceState.orders,
     selectOrder: (sliceState) => sliceState.order,
     selectFeeds: (sliceState) => sliceState.feeds,
+    selectLoadingFeed: (sliceState) => sliceState.loadingFeed,
     selectLoadingAllOrders: (sliceState) => sliceState.loadingAllOrders,
     selectLoadingOrder: (sliceState) => sliceState.loadingOrder,
     selectError: (sliceState) => sliceState.error,
@@ -163,7 +166,7 @@ const ordersSlice = createSlice({
       })
       // fetchFeeds
       .addCase(fetchFeeds.pending, (state) => {
-        state.loadingAllOrders = true;
+        state.loadingFeed = true;
         state.error = null;
       })
       .addCase(
@@ -176,12 +179,12 @@ const ordersSlice = createSlice({
             totalToday: number;
           }>
         ) => {
-          state.loadingAllOrders = false;
+          state.loadingFeed = false;
           state.feeds = action.payload;
         }
       )
       .addCase(fetchFeeds.rejected, (state, action) => {
-        state.loadingAllOrders = false;
+        state.loadingFeed = false;
         state.error = action.payload as string;
       });
   }
@@ -193,6 +196,7 @@ export const {
   selectOrder,
   selectFeeds,
   selectLoadingAllOrders,
+  selectLoadingFeed,
   selectLoadingOrder,
   selectError,
   selectOrderRequest,

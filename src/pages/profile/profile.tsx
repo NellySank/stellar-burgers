@@ -21,20 +21,28 @@ export const Profile: FC = () => {
   useEffect(() => {
     setFormValue((prevState) => ({
       ...prevState,
-      name: user?.name || '',
-      email: user?.email || ''
+      name: user.name || '',
+      email: user.email || ''
     }));
   }, [user]);
 
   const isFormChanged =
-    formValue.name !== user?.name ||
-    formValue.email !== user?.email ||
+    formValue.name !== user.name ||
+    formValue.email !== user.email ||
     !!formValue.password;
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     const userData: Partial<TRegisterData> = formValue;
-    dispatch(updateUser(userData));
+    try {
+      dispatch(updateUser(userData)).unwrap();
+      setFormValue((prevState) => ({
+        ...prevState,
+        password: ''
+      }));
+    } catch (error) {
+      console.error('Ошибка обновления пароля:', error);
+    }
   };
 
   const handleCancel = (e: SyntheticEvent) => {
@@ -62,6 +70,4 @@ export const Profile: FC = () => {
       handleInputChange={handleInputChange}
     />
   );
-
-  return null;
 };

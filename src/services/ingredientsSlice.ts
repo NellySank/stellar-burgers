@@ -1,9 +1,5 @@
 import { getIngredientsApi } from '@api';
-import {
-  createSlice,
-  createAsyncThunk,
-  createSelector
-} from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { TIngredient } from '@utils-types';
 
 interface IngredientsState {

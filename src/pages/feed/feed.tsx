@@ -6,14 +6,14 @@ import { useSelector, useDispatch } from '../../services/store';
 import {
   fetchFeeds,
   selectFeeds,
-  selectLoadingAllOrders
+  selectLoadingFeed
 } from '../../services/ordersSlice';
 import { fetchIngredients } from '../../services/ingredientsSlice';
 
 export const Feed: FC = () => {
   const dispatch = useDispatch();
   const orders: TOrder[] = useSelector(selectFeeds).orders;
-  const loadingOrders = useSelector(selectLoadingAllOrders);
+  const loadingFeed = useSelector(selectLoadingFeed);
 
   useEffect(() => {
     dispatch(fetchIngredients());
@@ -24,7 +24,7 @@ export const Feed: FC = () => {
     dispatch(fetchFeeds());
   };
 
-  if (loadingOrders) {
+  if (loadingFeed) {
     return <Preloader />;
   }
 

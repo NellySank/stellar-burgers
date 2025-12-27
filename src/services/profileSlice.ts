@@ -12,6 +12,7 @@ import {
   TRegisterData,
   TLoginData
 } from '@api';
+import { setCookie, deleteCookie, getCookie } from '../utils/cookie';
 
 type AuthState = {
   user: TUser | null;
@@ -34,6 +35,8 @@ export const registerUser = createAsyncThunk(
   async (data: TRegisterData, { rejectWithValue }) => {
     try {
       const response = await registerUserApi(data);
+      setCookie('accessToken', response.accessToken);
+      localStorage.setItem('refreshToken', response.refreshToken);
       return response;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Оибка при регистрации');
@@ -46,6 +49,8 @@ export const loginUser = createAsyncThunk(
   async (data: TLoginData, { rejectWithValue }) => {
     try {
       const response = await loginUserApi(data);
+      setCookie('accessToken', response.accessToken);
+      localStorage.setItem('refreshToken', response.refreshToken);
       return response;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Ошибка при логине');
@@ -110,6 +115,8 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await logoutApi();
+      deleteCookie('accessToken');
+      localStorage.removeItem('refreshToken');
       return response;
     } catch (error: any) {
       return rejectWithValue(error.message || 'Ошибка logout');
@@ -129,15 +136,21 @@ export const refreshUserToken = createAsyncThunk(
   }
 );
 
+export const checkUserAuth = createAsyncThunk(
+  'auth/checkUser',
+  async (_, { dispatch }) => {
+    if (getCookie('accessToken')) {
+      await dispatch(getUser());
+    }
+  }
+);
+
 const ProfileSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
     clearError: (state) => {
       state.error = null;
-    },
-    setAuthChecked: (state, action) => {
-      state.isAuthChecked = action.payload;
     }
   },
   selectors: {
@@ -163,7 +176,7 @@ const ProfileSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload as string;
       })
       // Вход
       .addCase(loginUser.pending, (state) => {
@@ -178,7 +191,7 @@ const ProfileSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload as string;
       })
       // Забыли пароль
       .addCase(forgotPassword.pending, (state) => {
@@ -190,7 +203,7 @@ const ProfileSlice = createSlice({
       })
       .addCase(forgotPassword.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload as string;
       })
       // Сброс пароля
       .addCase(resetPassword.pending, (state) => {
@@ -202,7 +215,7 @@ const ProfileSlice = createSlice({
       })
       .addCase(resetPassword.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload as string;
       })
       // Получение пользователя
       .addCase(getUser.pending, (state) => {
@@ -219,7 +232,7 @@ const ProfileSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = false;
         state.isAuthChecked = true;
-        state.error = action.error.message;
+        state.error = action.payload as string;
       })
       // Обновление пользователя
       .addCase(updateUser.pending, (state) => {
@@ -232,7 +245,7 @@ const ProfileSlice = createSlice({
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload as string;
       })
       // Выход
       .addCase(logoutUser.pending, (state) => {
@@ -247,7 +260,7 @@ const ProfileSlice = createSlice({
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload as string;
       })
       // Обновление токена
       .addCase(refreshUserToken.pending, (state) => {
@@ -261,12 +274,15 @@ const ProfileSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = false;
         state.isAuthChecked = true;
-        state.error = action.error.message;
+        state.error = action.payload as string;
+      })
+      .addCase(checkUserAuth.fulfilled, (state) => {
+        state.isAuthChecked = true;
       });
   }
 });
 
-export const { clearError, setAuthChecked } = ProfileSlice.actions;
+export const { clearError } = ProfileSlice.actions;
 export const {
   selectUser,
   selectIsAuthenticated,

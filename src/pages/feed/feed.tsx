@@ -16,7 +16,7 @@ export const Feed: FC = () => {
 
   useEffect(() => {
     dispatch(fetchFeeds());
-  }, [dispatch, fetchFeeds]);
+  }, [dispatch]);
 
   const handleGetFeeds = () => {
     dispatch(fetchFeeds());

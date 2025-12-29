@@ -41,12 +41,7 @@ const AppContent = () => {
   const backgroundLocation = location.state?.background;
 
   useEffect(() => {
-    if (!backgroundLocation) {
-      dispatch(fetchIngredients());
-    }
-  }, [backgroundLocation]);
-
-  useEffect(() => {
+    dispatch(fetchIngredients());
     dispatch(checkUserAuth());
   }, [dispatch]);
 

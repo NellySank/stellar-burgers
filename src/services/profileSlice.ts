@@ -38,8 +38,8 @@ export const registerUser = createAsyncThunk(
       setCookie('accessToken', response.accessToken);
       localStorage.setItem('refreshToken', response.refreshToken);
       return response;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Оибка при регистрации');
+    } catch (error) {
+      return rejectWithValue('Ошибка при регистрации');
     }
   }
 );
@@ -52,8 +52,8 @@ export const loginUser = createAsyncThunk(
       setCookie('accessToken', response.accessToken);
       localStorage.setItem('refreshToken', response.refreshToken);
       return response;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Ошибка при логине');
+    } catch (error) {
+      return rejectWithValue('Ошибка при логине');
     }
   }
 );
@@ -64,8 +64,8 @@ export const forgotPassword = createAsyncThunk(
     try {
       const response = await forgotPasswordApi(data);
       return response;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Ошибка при обновлении пароля');
+    } catch (error) {
+      return rejectWithValue('Ошибка при обновлении пароля');
     }
   }
 );
@@ -76,8 +76,8 @@ export const resetPassword = createAsyncThunk(
     try {
       const response = await resetPasswordApi(data);
       return response;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Ошибка сброса пароля');
+    } catch (error) {
+      return rejectWithValue('Ошибка сброса пароля');
     }
   }
 );
@@ -88,10 +88,8 @@ export const getUser = createAsyncThunk(
     try {
       const response = await getUserApi();
       return response;
-    } catch (error: any) {
-      return rejectWithValue(
-        error.message || 'Ошибка при получении данных пользователя'
-      );
+    } catch (error) {
+      return rejectWithValue('Необходимо авторизоваться');
     }
   }
 );
@@ -102,10 +100,8 @@ export const updateUser = createAsyncThunk(
     try {
       const response = await updateUserApi(user);
       return response;
-    } catch (error: any) {
-      return rejectWithValue(
-        error.message || 'Ошибка обновления данных пользователя'
-      );
+    } catch (error) {
+      return rejectWithValue('Ошибка обновления данных пользователя');
     }
   }
 );
@@ -118,8 +114,8 @@ export const logoutUser = createAsyncThunk(
       deleteCookie('accessToken');
       localStorage.removeItem('refreshToken');
       return response;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Ошибка logout');
+    } catch (error) {
+      return rejectWithValue('Ошибка logout');
     }
   }
 );
@@ -130,8 +126,8 @@ export const refreshUserToken = createAsyncThunk(
     try {
       const response = await refreshToken();
       return response;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Ошибка обновления токена');
+    } catch (error) {
+      return rejectWithValue('Ошибка обновления токена');
     }
   }
 );

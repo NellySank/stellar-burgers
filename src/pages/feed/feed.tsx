@@ -8,7 +8,6 @@ import {
   selectFeeds,
   selectLoadingFeed
 } from '../../services/ordersSlice';
-import { fetchIngredients } from '../../services/ingredientsSlice';
 
 export const Feed: FC = () => {
   const dispatch = useDispatch();
@@ -16,9 +15,8 @@ export const Feed: FC = () => {
   const loadingFeed = useSelector(selectLoadingFeed);
 
   useEffect(() => {
-    dispatch(fetchIngredients());
     dispatch(fetchFeeds());
-  }, [dispatch, fetchIngredients, fetchFeeds]);
+  }, [dispatch, fetchFeeds]);
 
   const handleGetFeeds = () => {
     dispatch(fetchFeeds());

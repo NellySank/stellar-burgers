@@ -7,19 +7,11 @@ import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
 import { FC } from 'react';
-import {
-  fetchIngredients,
-  selectIngredientsLoading
-} from '../../services/ingredientsSlice';
+import { selectIngredientsLoading } from '../../services/ingredientsSlice';
 
 export const ConstructorPage: FC = () => {
   /** TODO: взять переменную из стора */
-  const dispatch = useDispatch();
   const isIngredientsLoading = useSelector(selectIngredientsLoading);
-
-  useEffect(() => {
-    dispatch(fetchIngredients());
-  }, [dispatch]);
 
   return (
     <>

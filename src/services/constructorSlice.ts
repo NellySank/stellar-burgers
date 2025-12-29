@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TIngredient, TConstructorIngredient, TOrder } from '@utils-types';
 import { orderBurgerApi } from '@api';
 
@@ -7,16 +7,17 @@ interface ConstructorState {
     bun: TIngredient | null;
     ingredients: TConstructorIngredient[];
   };
+  counter: number;
 }
 
 const initialState: ConstructorState = {
   constructorItems: {
     bun: null,
     ingredients: []
-  }
+  },
+  counter: 0
 };
 
-// Слайс
 const constructorSlice = createSlice({
   name: 'constructorBurger',
   initialState,
@@ -25,9 +26,10 @@ const constructorSlice = createSlice({
     addIngredient: (state, action: PayloadAction<TIngredient>) => {
       const newItem: TConstructorIngredient = {
         ...action.payload,
-        id: crypto.randomUUID()
+        id: `ingredient-${state.counter}`
       };
       state.constructorItems.ingredients.push(newItem);
+      state.counter += 1;
     },
     // Удалить ингредиент по индексу
     removeIngredient: (state, action: PayloadAction<number>) => {
@@ -41,6 +43,7 @@ const constructorSlice = createSlice({
     clearConstructor: (state) => {
       state.constructorItems.bun = null;
       state.constructorItems.ingredients = [];
+      state.counter = 0;
     }
   },
   selectors: {

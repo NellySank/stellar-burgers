@@ -32,12 +32,19 @@ import store from '../../services/store';
 import { useEffect } from 'react';
 import { useDispatch } from '../../services/store';
 import { checkUserAuth } from '../../services/profileSlice';
+import { fetchIngredients } from '../../services/ingredientsSlice';
 
 const AppContent = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const backgroundLocation = location.state?.background;
+
+  useEffect(() => {
+    if (!backgroundLocation) {
+      dispatch(fetchIngredients());
+    }
+  }, [backgroundLocation]);
 
   useEffect(() => {
     dispatch(checkUserAuth());

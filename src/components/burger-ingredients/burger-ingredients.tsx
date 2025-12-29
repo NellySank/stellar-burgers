@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, FC } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../services/store';
 import { useInView } from 'react-intersection-observer';
 
 import { TTabMode } from '@utils-types';

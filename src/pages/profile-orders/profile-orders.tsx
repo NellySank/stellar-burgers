@@ -2,7 +2,6 @@ import { ProfileOrdersUI } from '@ui-pages';
 import { TOrder } from '@utils-types';
 import { FC, useEffect } from 'react';
 import { useSelector, useDispatch } from '../../services/store';
-import { fetchIngredients } from '../../services/ingredientsSlice';
 import {
   selectOrders,
   fetchOrders,
@@ -16,7 +15,6 @@ export const ProfileOrders: FC = () => {
   const isLoading = useSelector(selectLoadingAllOrders);
 
   useEffect(() => {
-    dispatch(fetchIngredients());
     dispatch(fetchOrders());
   }, [dispatch, fetchOrders]);
 

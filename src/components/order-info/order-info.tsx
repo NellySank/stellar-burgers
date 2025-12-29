@@ -9,16 +9,11 @@ import {
   fetchOrderByNumber,
   selectLoadingOrder
 } from '../../services/ordersSlice';
-import {
-  fetchIngredients,
-  selectIngredients
-} from '../../services/ingredientsSlice';
+import { selectIngredients } from '../../services/ingredientsSlice';
 
 export const OrderInfo: FC = () => {
-  const location = useLocation();
   const dispatch = useDispatch();
   const { number } = useParams<{ number: string }>();
-  const backgroundLocation = location.state?.background;
 
   const orderData = useSelector(selectOrder) ?? {
     createdAt: '',
@@ -36,10 +31,7 @@ export const OrderInfo: FC = () => {
 
   useEffect(() => {
     dispatch(fetchOrderByNumber(Number(number)));
-    if (!backgroundLocation) {
-      dispatch(fetchIngredients());
-    }
-  }, [dispatch, fetchOrderByNumber, fetchIngredients]);
+  }, [fetchOrderByNumber, number]);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {

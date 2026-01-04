@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TIngredient, TConstructorIngredient, TOrder } from '@utils-types';
 import { orderBurgerApi } from '@api';
 
-interface ConstructorState {
+export interface ConstructorState {
   constructorItems: {
     bun: TIngredient | null;
     ingredients: TConstructorIngredient[];

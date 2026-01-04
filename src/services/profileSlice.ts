@@ -14,7 +14,7 @@ import {
 } from '@api';
 import { setCookie, deleteCookie, getCookie } from '../utils/cookie';
 
-type AuthState = {
+export type AuthState = {
   user: TUser | null;
   isAuthChecked: boolean;
   isAuthenticated: boolean;

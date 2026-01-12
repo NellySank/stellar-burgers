@@ -46,7 +46,7 @@ export const fetchOrders = createAsyncThunk(
       const orders = await getOrdersApi();
       return orders;
     } catch (error) {
-      return rejectWithValue('Ошибка загрузки заказов' + error);
+      return rejectWithValue('Ошибка загрузки заказов');
     }
   }
 );
@@ -58,7 +58,7 @@ export const createOrder = createAsyncThunk(
       const response = await orderBurgerApi(ingredients);
       return response.order;
     } catch (error) {
-      return rejectWithValue('Ошибка создания заказа' + error);
+      return rejectWithValue('Ошибка создания заказа');
     }
   }
 );
@@ -70,7 +70,7 @@ export const fetchOrderByNumber = createAsyncThunk(
       const response = await getOrderByNumberApi(number);
       return response.orders[0];
     } catch (error) {
-      return rejectWithValue('Ошибка загрузки заказа по id' + error);
+      return rejectWithValue('Ошибка загрузки заказа по id');
     }
   }
 );
@@ -82,7 +82,7 @@ export const fetchFeeds = createAsyncThunk(
       const feeds = await getFeedsApi();
       return feeds;
     } catch (error) {
-      return rejectWithValue('Ошибка загрузки ленты заказов' + error);
+      return rejectWithValue('Ошибка загрузки ленты заказов');
     }
   }
 );
